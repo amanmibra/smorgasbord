@@ -1,18 +1,35 @@
 defmodule Smorgopsbord do
-  @moduledoc """
-  Documentation for Smorgopsbord.
+  use ExCLI.DSL, escript: true, mix_task: :sample
+
+  name "smorgopsbord"
+  description "description goes here"
+  long_description """
+  This is my long description
   """
 
-  @doc """
-  Hello world.
+  option :verbose,
+   help: "Increase the verbosity level",
+   aliases: [:v],
+   count: true
 
-  ## Examples
+  command :hello do
+   aliases [:hi]
+   description "Greets the user"
+   long_description """
+   Gives a nice a warm greeting to whoever would listen
+   """
 
-      iex> Smorgopsbord.hello
-      :world
+   argument :name
+   option :from, help: "the sender of hello"
 
-  """
-  def hello do
-    :world
+   run context do
+     if context.verbose >= 1 do
+       IO.puts("I am going to emit a greeting.")
+     end
+     if from = context[:from] do
+       IO.write("#{from} says: ")
+     end
+     IO.puts("Hello #{context.name}!")
+    end
   end
 end
